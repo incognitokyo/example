@@ -1,0 +1,52 @@
+Install Apache:
+dnf -y install httpd*
+host domain:
+past below content in file /etc/httpd/conf.d/vhost.conf
+##############################################
+<VirtualHost *:80>
+        ServerName abc.com
+        ServerAlias www.abc.com
+        DocumentRoot  /var/www/application/abc.com/public
+        ErrorLog logs/error_log-abc.com.log
+        CustomLog logs/access_log-abc.com.log combined
+        HostnameLookups Off
+        UseCanonicalName Off
+
+<Directory "/var/www/application/abc.com/public">
+                Options FollowSymLinks
+                AllowOverride All
+                Order allow,deny
+                Allow from all
+                Require all granted
+
+ </Directory>
+</VirtualHost>
+######################################################
+
+
+Install PHP 8.2 on CentOS 8 Stream
+
+dnf upgrade --refresh -y
+dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm	[CentOS 8]
+dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm	[CentOS 9]
+dnf install dnf-utils http://rpms.remirepo.net/enterprise/remi-release-8.rpm		[CentOS 8]
+dnf install dnf-utils https://rpms.remirepo.net/enterprise/remi-release-9.rpm		[CentOS 9]
+dnf remove php php-fpm -y
+dnf remove php* -y
+dnf module list reset php -y
+dnf module list php
+dnf module enable php:remi-8.2
+dnf install php php-devel
+dnf install php-cli php-curl php-mysqlnd php-gd php-opcache php-zip php-intl php-common php-bcmath php-imap php-imagick php-xmlrpc php-json php-readline php-memcached php-redis php-mbstring php-apcu php-xml
+
+php -v
+
+Install mysql:
+ sudo dnf update
+sudo dnf install mysql-server
+sudo systemctl start mysqld
+sudo systemctl enable mysqld
+sudo grep 'password' /var/log/mysqld.log
+sudo mysql_secure_installation [follow on screen instruction]
+how to login from termianl:
+mysql -u root -p
